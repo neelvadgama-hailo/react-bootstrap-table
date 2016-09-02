@@ -21,10 +21,10 @@ class TableColumn extends Component {
     }
 
     if (typeof children === 'object' && children !== null && children.props !== null) {
-      if (children.props.type === 'checkbox' || children.props.type === 'radio') {
+      if (children[0].props.type === 'checkbox' || children[0].props.type === 'radio') {
         shouldUpdated = shouldUpdated ||
-          children.props.type !== nextProps.children.props.type ||
-          children.props.checked !== nextProps.children.props.checked;
+          children[0].props.type !== nextProps.children[0].props.type ||
+          children[0].props.checked !== nextProps.children[0].props.checked;
       } else {
         shouldUpdated = true;
       }

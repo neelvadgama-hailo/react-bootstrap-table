@@ -21651,7 +21651,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            exportCSV,
 	            insertBtn,
 	            deleteBtn,
-	            showSelectedOnlyBtn,
+	            showSelectedOnlyBtn
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'col-xs-12 col-sm-6 col-md-6 col-lg-4' },
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'additional-buttons' },
 	            this.props.additionalButtons
 	          )
 	        ),

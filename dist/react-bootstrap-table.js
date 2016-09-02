@@ -21644,7 +21644,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        { className: 'row' },
 	        _react2['default'].createElement(
 	          'div',
-	          { className: 'col-xs-12 col-sm-6 col-md-6 col-lg-8' },
+	          { className: 'col-xs-12 col-sm-12 col-md-4 col-lg-4' },
 	          _react2['default'].createElement(
 	            'div',
 	            { className: 'btn-group btn-group-sm', role: 'group' },
@@ -21656,7 +21656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ),
 	        _react2['default'].createElement(
 	          'div',
-	          { className: 'col-xs-12 col-sm-6 col-md-6 col-lg-4' },
+	          { className: 'col-xs-12 col-sm-6 col-md-4 col-lg-4' },
 	          _react2['default'].createElement(
 	            'div',
 	            { className: 'additional-buttons' },
@@ -21665,7 +21665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ),
 	        _react2['default'].createElement(
 	          'div',
-	          { className: 'col-xs-12 col-sm-6 col-md-6 col-lg-4' },
+	          { className: 'col-xs-12 col-sm-6 col-md-4 col-lg-4' },
 	          searchTextInput
 	        ),
 	        _react2['default'].createElement(_NotificationJs2['default'], { ref: 'notifier' }),

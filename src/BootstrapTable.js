@@ -789,7 +789,7 @@ class BootstrapTable extends Component {
   }
 
   renderToolBar() {
-    const { selectRow, insertRow, deleteRow, search, children } = this.props;
+    const { selectRow, insertRow, deleteRow, search, additionalButtons, children } = this.props;
     const enableShowOnlySelected = selectRow && selectRow.showOnlySelected;
     if (enableShowOnlySelected
       || insertRow
@@ -844,7 +844,8 @@ class BootstrapTable extends Component {
             onDropRow={ this.handleDropRow }
             onSearch={ this.handleSearch }
             onExportCSV={ this.handleExportCSV }
-            onShowOnlySelected={ this.handleShowOnlySelected }/>
+            onShowOnlySelected={ this.handleShowOnlySelected }
+            additionalButtons={ additionalButtons }/>
         </div>
       );
     } else {
@@ -982,6 +983,7 @@ BootstrapTable.propTypes = {
   insertRow: PropTypes.bool,
   deleteRow: PropTypes.bool,
   search: PropTypes.bool,
+  additionalButtons: PropTypes.object,
   columnFilter: PropTypes.bool,
   trClassName: PropTypes.any,
   tableStyle: PropTypes.object,
@@ -1075,6 +1077,7 @@ BootstrapTable.defaultProps = {
   insertRow: false,
   deleteRow: false,
   search: false,
+  additionalButtons: null,
   multiColumnSearch: false,
   columnFilter: false,
   trClassName: '',

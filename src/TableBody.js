@@ -260,15 +260,20 @@ class TableBody extends Component {
 
   renderSelectRowColumn(selected, inputType, disabled, CustomComponent = null, rowIndex = null) {
     return (
-      <TableColumn dataAlign='center'>
+      <TableColumn dataAlign='center' className='checkbox checkbox-warning hidden-xs hidden-sm'>
       { CustomComponent ?
         <CustomComponent type={ inputType } checked={ selected } disabled={ disabled }
           rowIndex={ rowIndex }
           onChange={ e=>this.handleSelectRowColumChange(e,
             e.currentTarget.parentElement.parentElement.parentElement.rowIndex) }/> :
-        <input type={ inputType } checked={ selected } disabled={ disabled }
-          onChange={ e=>this.handleSelectRowColumChange(e,
-            e.currentTarget.parentElement.parentElement.rowIndex) }/>
+        [ <input
+            key={ `checkbox-${rowIndex}` }
+            type={ inputType }
+            checked={ selected }
+            disabled={ disabled }
+            onChange={ e=>this.handleSelectRowColumChange(e,
+              e.currentTarget.parentElement.parentElement.rowIndex) }/>,
+          <label key={ `label-${rowIndex}` } /> ]
       }
       </TableColumn>
     );

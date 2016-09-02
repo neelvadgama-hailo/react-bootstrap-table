@@ -12,10 +12,14 @@ class Checkbox extends Component {
   }
   render() {
     return (
-      <input className='react-bs-select-all'
-        type='checkbox'
-        checked={ this.props.checked }
-        onChange={ this.props.onChange } />
+      <div className='checkbox checkbox-warning'>
+        <input
+          className='react-bs-select-all'
+          type='checkbox'
+          checked={ this.props.checked }
+          onChange={ this.props.onChange } />
+        <label />
+      </div>
     );
   }
 }
@@ -69,7 +73,7 @@ class TableHeader extends Component {
       return (<SelectRowHeaderColumn />);
     } else if (this.props.rowSelectType === Const.ROW_SELECT_MULTI) {
       return (
-        <SelectRowHeaderColumn>
+        <SelectRowHeaderColumn className='hidden-xs hidden-sm'>
           <Checkbox
             onChange={ this.props.onSelectAllRow }
             checked={ this.props.isSelectAll }/>

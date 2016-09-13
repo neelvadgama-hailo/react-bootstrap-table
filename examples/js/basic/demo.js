@@ -1,4 +1,4 @@
-/* eslint max-len: 0 */
+/*eslint-disable */
 import React from 'react';
 import BasicTable from './basic-table';
 import SingleColumnTable from './single-column-table';
@@ -20,38 +20,10 @@ class Demo extends React.Component {
           { renderLinks('basic/basic-table.js') }
           <BasicTable/>
         </Panel>
-        <Panel header={ 'Empty Table Example' }>
-          { renderLinks('basic/no-data-table.js') }
-          <NoDataTable/>
-        </Panel>
-        <Panel header={ 'A Single Column react-bootstrap-table' }>
-          { renderLinks('basic/single-column-table.js') }
-          <SingleColumnTable/>
-        </Panel>
-        <Panel header={ 'Table hover, striped and condensed Example' }>
-          { renderLinks('basic/hover-striped-table.js') }
-          <HoverStripedTable/>
-        </Panel>
-        <Panel header={ 'Borderless table Example' }>
-          { renderLinks('basic/borderless-table.js') }
-          <BorderlessTable/>
-        </Panel>
-        <Panel header={ 'A Large Column Table Demo' }>
-          { renderLinks('basic/large-column-table.js') }
-          <h3 style={ { color: 'red' } }>Warning</h3>
-          <span style={ { color: 'red' } }>
-            There is one restriction when you want to make a large column table scrollable:<br/>
-            <b>You need set the width on some column to make the total width of table exceed the width of outter.</b>
-          </span>
-          <LargeColumnTable/>
-        </Panel>
-        <Panel header={ 'Table Scroll Example' }>
-          { renderLinks('basic/scroll-table') }
-          <ScrollTable/>
-        </Panel>
       </Col>
     );
   }
 }
 
 export default Demo;
+/*eslint-enable */

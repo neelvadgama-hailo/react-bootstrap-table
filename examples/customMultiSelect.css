@@ -58,3 +58,88 @@
 .custom-select-header-class > thead > tr > th:first-child {
   padding: 0 !important;
 }
+
+.checkbox input[type=checkbox] {
+  margin-left: 0;
+}
+.toggle-view-carret:before {
+  font-size: 10px;
+  cursor: pointer;
+  display: inline-block;
+  transition-duration: 0.2s;
+}
+.toggle-view-carret.opened:before {
+  content: "\25b6";
+  transform: rotate(90deg);
+}
+.toggle-view-carret.closed:before {
+  content: "\25b6";
+}
+
+
+.toggle-view {
+  display: none;
+}
+.toggle-view.open {
+  display: table-row;
+}
+.toggle-view td:first-of-type {
+  display: none;
+}
+.toggle-view td {
+  padding: 0;
+}
+.toggle-view td .map-container {
+  height: 200px;
+  position: relative;
+}
+.toggle-view td .map-container img.static-map {
+  width: 100%;
+  min-height: 100%;
+  position: absolute;
+}
+.toggle-view td .map-container.has-reference {
+  height: 270px;
+}
+.toggle-view td .map-container.has-reference .trip-info {
+  height: auto;
+}
+.toggle-view td .map-container.has-reference .trip-info ul li .reference-container strong {
+  font-size: 16px;
+}
+.toggle-view td .map-container.has-reference .trip-info ul li .reference-container p {
+  margin: 0;
+}
+.toggle-view td .map-container .trip-info {
+  position: absolute;
+  width: 300px;
+  height: 165px;
+  background-color: #3b3b3b;
+  margin: 18px 0px 0 44px;
+  border-radius: 4px;
+  color: #fff;
+  padding: 23px 18px;
+}
+.toggle-view td .map-container .trip-info ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.toggle-view td .map-container .trip-info ul li .icon {
+  margin-top: 3px;
+}
+.toggle-view td .map-container .trip-info ul li .icon img {
+  width: 14px;
+  height: 19px;
+}
+.toggle-view td .map-container .trip-info ul li .timeaddress strong {
+  font-size: 16px;
+}
+.toggle-view td .map-container .trip-info ul li .timeaddress p {
+  font-size: 14px;
+  overflow: hidden;
+  height: 35px;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
+}

@@ -145,6 +145,7 @@ class BootstrapTable extends Component {
         text: column.props.children,
         sortFunc: column.props.sortFunc,
         sortFuncExtraData: column.props.sortFuncExtraData,
+        toggleView: column.props.toggleView,
         export: column.props.export,
         index: i
       };
@@ -257,6 +258,13 @@ class BootstrapTable extends Component {
     const tableFilter = this.renderTableFilter(columns);
     const isSelectAll = this.isSelectAll();
     let sortIndicator = this.props.options.sortIndicator;
+    const toggleView = React.Children.toArray(this.props.children).filter((column) => {
+      if (column.props.toggleView) {
+        return true;
+      }
+      return false;
+    });
+
     if (typeof this.props.options.sortIndicator === 'undefined') sortIndicator = true;
     return (
       <div className={ classSet('react-bs-table-container', this.props.containerClass) }
@@ -305,7 +313,8 @@ class BootstrapTable extends Component {
             onRowMouseOver={ this.handleRowMouseOver }
             onRowMouseOut={ this.handleRowMouseOut }
             onSelectRow={ this.handleSelectRow }
-            noDataText={ this.props.options.noDataText } />
+            noDataText={ this.props.options.noDataText }
+            toggleView={ toggleView } />
         </div>
         { tableFilter }
         { pagination }
@@ -1044,7 +1053,8 @@ BootstrapTable.propTypes = {
   }),
   exportCSV: PropTypes.bool,
   csvFileName: PropTypes.oneOfType([ PropTypes.string, PropTypes.func ]),
-  ignoreSinglePage: PropTypes.bool
+  ignoreSinglePage: PropTypes.bool,
+  toggleView: PropTypes.object
 };
 BootstrapTable.defaultProps = {
   height: '100%',
@@ -1136,7 +1146,8 @@ BootstrapTable.defaultProps = {
   },
   exportCSV: false,
   csvFileName: 'spreadsheet.csv',
-  ignoreSinglePage: false
+  ignoreSinglePage: false,
+  toggleView: null
 };
 
 export default BootstrapTable;

@@ -3,6 +3,7 @@ import Const from './Const';
 import TableRow from './TableRow';
 import TableColumn from './TableColumn';
 import TableEditColumn from './TableEditColumn';
+import TableRowExtended from './TableRowExtended';
 import classSet from 'classnames';
 
 const isFun = function(obj) {
@@ -14,9 +15,32 @@ class TableBody extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currEditCell: null
+      currEditCell: null,
+      currentToggledView: 0
     };
     this.editing = false;
+  }
+
+
+  renderToggleViewColumn(row, open) {
+    let _class = 'toggle-view-carret closed';
+    if (open) {
+      _class = 'toggle-view-carret opened';
+    }
+    return (
+      <TableColumn
+        className='hidden-xs hidden-sm'>
+        <div className={ _class } onClick={ this.toggleToggleView.bind(this, row) } />
+      </TableColumn>
+    );
+  }
+
+  toggleToggleView(row) {
+    if (this.state.currentToggledView !== undefined && this.state.currentToggledView === row) {
+      this.setState({ currentToggledView: undefined });
+      return;
+    }
+    this.setState({ currentToggledView: row });
   }
 
   render() {
@@ -103,15 +127,58 @@ class TableBody extends Component {
       const key = data[this.props.keyField];
       const disable = unselectable.indexOf(key) !== -1;
       const selected = this.props.selectedRowKeys.indexOf(key) !== -1;
-      const selectRowColumn = isSelectRowDefined && !this.props.selectRow.hideSelectColumn ?
+      let selectRowColumn = isSelectRowDefined && !this.props.selectRow.hideSelectColumn ?
               this.renderSelectRowColumn(selected, inputType, disable, CustomComponent, r) : null;
+
+      let toggleView = null;
+      if (this.props.toggleView && this.props.toggleView.length > 0) {
+        let rowExtendClass = 'toggle-view hidden-xs hidden-sm';
+        let open = false;
+        if (this.state.currentToggledView !== undefined && this.state.currentToggledView === r) {
+          rowExtendClass = 'toggle-view hidden-xs hidden-sm open';
+          open = true;
+        }
+
+        selectRowColumn = this.renderToggleViewColumn(r, open);
+        let content = [ <td key='toggle-view-content' colSpan={ (tableColumns.length) }></td> ];
+        if (this.props.toggleView[0].props.dataFormat !== undefined) {
+          content = (
+            <td
+              key='toggle-view-content'
+              colSpan={ tableColumns.length }>
+              { this.props.toggleView[0].props.dataFormat(null, data) }
+            </td>
+          );
+        } else if (this.props.toggleView[0].props.fetchAsyncData !== undefined && open) {
+          content = (
+            <td
+              key='toggle-view-content'
+              colSpan={ tableColumns.length }>
+              { this.props.toggleView[0].props.fetchAsyncData(null, data) }
+            </td>
+          );
+        }
+
+        toggleView = (
+          <TableRowExtended
+            isSelected={ false }
+            selectRow={ undefined }
+            enableCellEdit={ false }
+            onSelectRow={ () => {} }
+            className={ rowExtendClass }>
+            { selectRowColumn }
+            { content }
+          </TableRowExtended>
+        );
+      }
+
       // add by bluespring for className customize
       let trClassName = this.props.trClassName;
       if (isFun(this.props.trClassName)) {
         trClassName = this.props.trClassName(data, r);
       }
       return (
-        <TableRow isSelected={ selected } key={ key } className={ trClassName }
+        [ <TableRow isSelected={ selected } key={ key } className={ trClassName }
           selectRow={ isSelectRowDefined ? this.props.selectRow : undefined }
           enableCellEdit={ this.props.cellEdit.mode !== Const.CELL_EDIT_NONE }
           onRowClick={ this.handleRowClick }
@@ -121,7 +188,7 @@ class TableBody extends Component {
           unselectableRow={ disable }>
           { selectRowColumn }
           { tableColumns }
-        </TableRow>
+        </TableRow>, toggleView ]
       );
     }, this);
 
@@ -298,6 +365,7 @@ TableBody.propTypes = {
   noDataText: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]),
   style: PropTypes.object,
   tableBodyClass: PropTypes.string,
-  bodyContainerClass: PropTypes.string
+  bodyContainerClass: PropTypes.string,
+  toggleView: PropTypes.object
 };
 export default TableBody;

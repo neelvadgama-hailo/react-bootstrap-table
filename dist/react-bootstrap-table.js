@@ -66,7 +66,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
 
-	var _TableHeaderColumn = __webpack_require__(44);
+	var _TableHeaderColumn = __webpack_require__(45);
 
 	var _TableHeaderColumn2 = _interopRequireDefault(_TableHeaderColumn);
 
@@ -121,29 +121,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _TableBody2 = _interopRequireDefault(_TableBody);
 
-	var _paginationPaginationList = __webpack_require__(32);
+	var _paginationPaginationList = __webpack_require__(33);
 
 	var _paginationPaginationList2 = _interopRequireDefault(_paginationPaginationList);
 
-	var _toolbarToolBar = __webpack_require__(34);
+	var _toolbarToolBar = __webpack_require__(35);
 
 	var _toolbarToolBar2 = _interopRequireDefault(_toolbarToolBar);
 
-	var _TableFilter = __webpack_require__(35);
+	var _TableFilter = __webpack_require__(36);
 
 	var _TableFilter2 = _interopRequireDefault(_TableFilter);
 
-	var _storeTableDataStore = __webpack_require__(36);
+	var _storeTableDataStore = __webpack_require__(37);
 
-	var _util = __webpack_require__(37);
+	var _util = __webpack_require__(38);
 
 	var _util2 = _interopRequireDefault(_util);
 
-	var _csv_export_util = __webpack_require__(38);
+	var _csv_export_util = __webpack_require__(39);
 
 	var _csv_export_util2 = _interopRequireDefault(_csv_export_util);
 
-	var _Filter = __webpack_require__(42);
+	var _Filter = __webpack_require__(43);
 
 	var BootstrapTable = (function (_Component) {
 	  _inherits(BootstrapTable, _Component);
@@ -672,6 +672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          text: column.props.children,
 	          sortFunc: column.props.sortFunc,
 	          sortFuncExtraData: column.props.sortFuncExtraData,
+	          toggleView: column.props.toggleView,
 	          'export': column.props['export'],
 	          index: i
 	        };
@@ -793,6 +794,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var tableFilter = this.renderTableFilter(columns);
 	      var isSelectAll = this.isSelectAll();
 	      var sortIndicator = this.props.options.sortIndicator;
+	      var toggleView = _react2['default'].Children.toArray(this.props.children).filter(function (column) {
+	        if (column.props.toggleView) {
+	          return true;
+	        }
+	        return false;
+	      });
+
 	      if (typeof this.props.options.sortIndicator === 'undefined') sortIndicator = true;
 	      return _react2['default'].createElement(
 	        'div',
@@ -846,7 +854,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            onRowMouseOver: this.handleRowMouseOver,
 	            onRowMouseOut: this.handleRowMouseOut,
 	            onSelectRow: this.handleSelectRow,
-	            noDataText: this.props.options.noDataText })
+	            noDataText: this.props.options.noDataText,
+	            toggleView: toggleView })
 	        ),
 	        tableFilter,
 	        pagination
@@ -1236,7 +1245,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }),
 	  exportCSV: _react.PropTypes.bool,
 	  csvFileName: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.func]),
-	  ignoreSinglePage: _react.PropTypes.bool
+	  ignoreSinglePage: _react.PropTypes.bool,
+	  toggleView: _react.PropTypes.object
 	};
 	BootstrapTable.defaultProps = {
 	  height: '100%',
@@ -1328,7 +1338,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 	  exportCSV: false,
 	  csvFileName: 'spreadsheet.csv',
-	  ignoreSinglePage: false
+	  ignoreSinglePage: false,
+	  toggleView: null
 	};
 
 	exports['default'] = BootstrapTable;
@@ -1728,6 +1739,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _TableEditColumn2 = _interopRequireDefault(_TableEditColumn);
 
+	var _TableRowExtended = __webpack_require__(32);
+
+	var _TableRowExtended2 = _interopRequireDefault(_TableRowExtended);
+
 	var _classnames = __webpack_require__(3);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
@@ -1820,12 +1835,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    this.state = {
-	      currEditCell: null
+	      currEditCell: null,
+	      currentToggledView: 0
 	    };
 	    this.editing = false;
 	  }
 
 	  _createClass(TableBody, [{
+	    key: 'renderToggleViewColumn',
+	    value: function renderToggleViewColumn(row, open) {
+	      var _class = 'toggle-view-carret closed';
+	      if (open) {
+	        _class = 'toggle-view-carret opened';
+	      }
+	      return _react2['default'].createElement(
+	        _TableColumn2['default'],
+	        {
+	          className: 'hidden-xs hidden-sm' },
+	        _react2['default'].createElement('div', { className: _class, onClick: this.toggleToggleView.bind(this, row) })
+	      );
+	    }
+	  }, {
+	    key: 'toggleToggleView',
+	    value: function toggleToggleView(row) {
+	      if (this.state.currentToggledView !== undefined && this.state.currentToggledView === row) {
+	        this.setState({ currentToggledView: undefined });
+	        return;
+	      }
+	      this.setState({ currentToggledView: row });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var tableClasses = (0, _classnames2['default'])('table', {
@@ -1905,12 +1944,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var disable = unselectable.indexOf(key) !== -1;
 	        var selected = this.props.selectedRowKeys.indexOf(key) !== -1;
 	        var selectRowColumn = isSelectRowDefined && !this.props.selectRow.hideSelectColumn ? this.renderSelectRowColumn(selected, inputType, disable, CustomComponent, r) : null;
+
+	        var toggleView = null;
+	        if (this.props.toggleView && this.props.toggleView.length > 0) {
+	          var rowExtendClass = 'toggle-view hidden-xs hidden-sm';
+	          var _open = false;
+	          if (this.state.currentToggledView !== undefined && this.state.currentToggledView === r) {
+	            rowExtendClass = 'toggle-view hidden-xs hidden-sm open';
+	            _open = true;
+	          }
+
+	          selectRowColumn = this.renderToggleViewColumn(r, _open);
+	          var content = [_react2['default'].createElement('td', { key: 'toggle-view-content', colSpan: tableColumns.length })];
+	          if (this.props.toggleView[0].props.dataFormat !== undefined) {
+	            content = _react2['default'].createElement(
+	              'td',
+	              {
+	                key: 'toggle-view-content',
+	                colSpan: tableColumns.length },
+	              this.props.toggleView[0].props.dataFormat(null, data)
+	            );
+	          } else if (this.props.toggleView[0].props.fetchAsyncData !== undefined && _open) {
+	            content = _react2['default'].createElement(
+	              'td',
+	              {
+	                key: 'toggle-view-content',
+	                colSpan: tableColumns.length },
+	              this.props.toggleView[0].props.fetchAsyncData(null, data)
+	            );
+	          }
+
+	          toggleView = _react2['default'].createElement(
+	            _TableRowExtended2['default'],
+	            {
+	              isSelected: false,
+	              selectRow: undefined,
+	              enableCellEdit: false,
+	              onSelectRow: function () {},
+	              className: rowExtendClass },
+	            selectRowColumn,
+	            content
+	          );
+	        }
+
 	        // add by bluespring for className customize
 	        var trClassName = this.props.trClassName;
 	        if (isFun(this.props.trClassName)) {
 	          trClassName = this.props.trClassName(data, r);
 	        }
-	        return _react2['default'].createElement(
+	        return [_react2['default'].createElement(
 	          _TableRow2['default'],
 	          { isSelected: selected, key: key, className: trClassName,
 	            selectRow: isSelectRowDefined ? this.props.selectRow : undefined,
@@ -1922,7 +2004,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            unselectableRow: disable },
 	          selectRowColumn,
 	          tableColumns
-	        );
+	        ), toggleView];
 	      }, this);
 
 	      if (tableRows.length === 0) {
@@ -2041,7 +2123,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  noDataText: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.object]),
 	  style: _react.PropTypes.object,
 	  tableBodyClass: _react.PropTypes.string,
-	  bodyContainerClass: _react.PropTypes.string
+	  bodyContainerClass: _react.PropTypes.string,
+	  toggleView: _react.PropTypes.object
 	};
 	exports['default'] = TableBody;
 	module.exports = exports['default'];
@@ -2247,7 +2330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return shouldUpdated;
 	      }
 
-	      if (typeof children === 'object' && children !== null && children.props !== null) {
+	      if (typeof children === 'object' && children[0] !== undefined && children !== null && children.props !== null) {
 	        if (children[0].props.type === 'checkbox' || children[0].props.type === 'radio') {
 	          shouldUpdated = shouldUpdated || children[0].props.type !== nextProps.children[0].props.type || children[0].props.checked !== nextProps.children[0].props.checked;
 	        } else {
@@ -20981,7 +21064,57 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _PageButtonJs = __webpack_require__(33);
+	var _TableColumn2 = __webpack_require__(10);
+
+	var _TableColumn3 = _interopRequireDefault(_TableColumn2);
+
+	var TableRowExtended = (function (_TableColumn) {
+	  _inherits(TableRowExtended, _TableColumn);
+
+	  function TableRowExtended() {
+	    _classCallCheck(this, TableRowExtended);
+
+	    _get(Object.getPrototypeOf(TableRowExtended.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(TableRowExtended, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement('tr', this.props);
+	    }
+	  }]);
+
+	  return TableRowExtended;
+	})(_TableColumn3['default']);
+
+	exports['default'] = TableRowExtended;
+	module.exports = exports['default'];
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _PageButtonJs = __webpack_require__(34);
 
 	var _PageButtonJs2 = _interopRequireDefault(_PageButtonJs);
 
@@ -21257,7 +21390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21335,7 +21468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21866,7 +21999,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22001,7 +22134,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint no-nested-ternary: 0 */
@@ -22659,7 +22792,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.TableDataStore = TableDataStore;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22727,7 +22860,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint block-scoped-var: 0 */
@@ -22742,12 +22875,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _util = __webpack_require__(37);
+	var _util = __webpack_require__(38);
 
 	var _util2 = _interopRequireDefault(_util);
 
 	if (_util2['default'].canUseDOM()) {
-	  var filesaver = __webpack_require__(39);
+	  var filesaver = __webpack_require__(40);
 	  var saveAs = filesaver.saveAs;
 	}
 
@@ -22787,7 +22920,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
@@ -23048,21 +23181,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	if (typeof module !== "undefined" && module.exports) {
 		module.exports.saveAs = saveAs;
-	} else if ("function" !== "undefined" && __webpack_require__(40) !== null && __webpack_require__(41) != null) {
+	} else if ("function" !== "undefined" && __webpack_require__(41) !== null && __webpack_require__(42) != null) {
 		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 			return saveAs;
 		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -23070,7 +23203,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23093,7 +23226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Const2 = _interopRequireDefault(_Const);
 
-	var _events = __webpack_require__(43);
+	var _events = __webpack_require__(44);
 
 	var Filter = (function (_EventEmitter) {
 	  _inherits(Filter, _EventEmitter);
@@ -23140,7 +23273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Filter = Filter;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -23448,7 +23581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint default-case: 0 */
@@ -23479,27 +23612,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Const2 = _interopRequireDefault(_Const);
 
-	var _util = __webpack_require__(37);
+	var _util = __webpack_require__(38);
 
 	var _util2 = _interopRequireDefault(_util);
 
-	var _filtersDate = __webpack_require__(45);
+	var _filtersDate = __webpack_require__(46);
 
 	var _filtersDate2 = _interopRequireDefault(_filtersDate);
 
-	var _filtersText = __webpack_require__(46);
+	var _filtersText = __webpack_require__(47);
 
 	var _filtersText2 = _interopRequireDefault(_filtersText);
 
-	var _filtersRegex = __webpack_require__(47);
+	var _filtersRegex = __webpack_require__(48);
 
 	var _filtersRegex2 = _interopRequireDefault(_filtersRegex);
 
-	var _filtersSelect = __webpack_require__(48);
+	var _filtersSelect = __webpack_require__(49);
 
 	var _filtersSelect2 = _interopRequireDefault(_filtersSelect);
 
-	var _filtersNumber = __webpack_require__(49);
+	var _filtersNumber = __webpack_require__(50);
 
 	var _filtersNumber2 = _interopRequireDefault(_filtersNumber);
 
@@ -23775,7 +23908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint quotes: 0 */
@@ -23959,7 +24092,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24072,7 +24205,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24185,7 +24318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24314,7 +24447,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

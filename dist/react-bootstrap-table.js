@@ -801,6 +801,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	      });
 
+	      var headerChildren = _react2['default'].Children.toArray(this.props.children).filter(function (column) {
+	        if (column.props.toggleView) {
+	          return false;
+	        }
+	        return true;
+	      });
+
 	      if (typeof this.props.options.sortIndicator === 'undefined') sortIndicator = true;
 	      return _react2['default'].createElement(
 	        'div',
@@ -832,8 +839,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	              bordered: this.props.bordered,
 	              condensed: this.props.condensed,
 	              isFiltered: this.filter ? true : false,
-	              isSelectAll: isSelectAll },
-	            this.props.children
+	              isSelectAll: isSelectAll,
+	              toggleView: toggleView },
+	            headerChildren
 	          ),
 	          _react2['default'].createElement(_TableBody2['default'], { ref: 'body',
 	            bodyContainerClass: this.props.bodyContainerClass,
@@ -1591,6 +1599,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'renderSelectRowHeader',
 	    value: function renderSelectRowHeader() {
+	      if (this.props.toggleView && this.props.toggleView.length > 0) {
+	        return _react2['default'].createElement(_SelectRowHeaderColumn2['default'], { className: 'hidden-xs hidden-sm' });
+	      }
 	      if (this.props.customComponent) {
 	        var CustomComponent = this.props.customComponent;
 	        return _react2['default'].createElement(
@@ -1634,7 +1645,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  isFiltered: _react.PropTypes.bool,
 	  isSelectAll: _react.PropTypes.oneOf([true, 'indeterminate', false]),
 	  sortIndicator: _react.PropTypes.bool,
-	  customComponent: _react.PropTypes.func
+	  customComponent: _react.PropTypes.func,
+	  toggleView: _react.PropTypes.array
 	};
 
 	exports['default'] = TableHeader;
@@ -1977,10 +1989,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	          toggleView = _react2['default'].createElement(
 	            _TableRowExtended2['default'],
 	            {
-	              isSelected: false,
-	              selectRow: undefined,
-	              enableCellEdit: false,
-	              onSelectRow: function () {},
 	              className: rowExtendClass },
 	            selectRowColumn,
 	            content
@@ -2124,7 +2132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  style: _react.PropTypes.object,
 	  tableBodyClass: _react.PropTypes.string,
 	  bodyContainerClass: _react.PropTypes.string,
-	  toggleView: _react.PropTypes.object
+	  toggleView: _react.PropTypes.array
 	};
 	exports['default'] = TableBody;
 	module.exports = exports['default'];
@@ -21064,12 +21072,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TableColumn2 = __webpack_require__(10);
-
-	var _TableColumn3 = _interopRequireDefault(_TableColumn2);
-
-	var TableRowExtended = (function (_TableColumn) {
-	  _inherits(TableRowExtended, _TableColumn);
+	var TableRowExtended = (function (_Component) {
+	  _inherits(TableRowExtended, _Component);
 
 	  function TableRowExtended() {
 	    _classCallCheck(this, TableRowExtended);
@@ -21085,7 +21089,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return TableRowExtended;
-	})(_TableColumn3['default']);
+	})(_react.Component);
 
 	exports['default'] = TableRowExtended;
 	module.exports = exports['default'];

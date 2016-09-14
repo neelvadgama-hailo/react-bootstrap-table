@@ -35,14 +35,6 @@ export default class BasicTable extends React.Component {
             data={employees.result}
             search
             multiColumnSearch
-            ignoreSinglePage
-            pagination
-            bordered={false}
-            selectRow={{
-                mode: 'checkbox',
-                clickToSelect: false,
-
-            }}
         >
             <TableHeaderColumn
                 dataField="memberId"

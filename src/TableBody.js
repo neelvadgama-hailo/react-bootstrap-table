@@ -161,10 +161,6 @@ class TableBody extends Component {
 
         toggleView = (
           <TableRowExtended
-            isSelected={ false }
-            selectRow={ undefined }
-            enableCellEdit={ false }
-            onSelectRow={ () => {} }
             className={ rowExtendClass }>
             { selectRowColumn }
             { content }
@@ -366,6 +362,6 @@ TableBody.propTypes = {
   style: PropTypes.object,
   tableBodyClass: PropTypes.string,
   bodyContainerClass: PropTypes.string,
-  toggleView: PropTypes.object
+  toggleView: PropTypes.array
 };
 export default TableBody;

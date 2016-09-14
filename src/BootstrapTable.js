@@ -265,6 +265,13 @@ class BootstrapTable extends Component {
       return false;
     });
 
+    const headerChildren = React.Children.toArray(this.props.children).filter((column) => {
+      if (column.props.toggleView) {
+        return false;
+      }
+      return true;
+    });
+
     if (typeof this.props.options.sortIndicator === 'undefined') sortIndicator = true;
     return (
       <div className={ classSet('react-bs-table-container', this.props.containerClass) }
@@ -291,8 +298,9 @@ class BootstrapTable extends Component {
             bordered={ this.props.bordered }
             condensed={ this.props.condensed }
             isFiltered={ this.filter ? true : false }
-            isSelectAll={ isSelectAll }>
-            { this.props.children }
+            isSelectAll={ isSelectAll }
+            toggleView={ toggleView } >
+            { headerChildren }
           </TableHeader>
           <TableBody ref='body'
             bodyContainerClass={ this.props.bodyContainerClass }

@@ -60,6 +60,11 @@ class TableHeader extends Component {
   }
 
   renderSelectRowHeader() {
+    if (this.props.toggleView && this.props.toggleView.length > 0) {
+      return (
+        <SelectRowHeaderColumn className='hidden-xs hidden-sm' />
+      );
+    }
     if (this.props.customComponent) {
       const CustomComponent = this.props.customComponent;
       return (
@@ -99,7 +104,8 @@ TableHeader.propTypes = {
   isFiltered: PropTypes.bool,
   isSelectAll: PropTypes.oneOf([ true, 'indeterminate', false ]),
   sortIndicator: PropTypes.bool,
-  customComponent: PropTypes.func
+  customComponent: PropTypes.func,
+  toggleView: PropTypes.array
 };
 
 export default TableHeader;

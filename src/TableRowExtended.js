@@ -1,11 +1,9 @@
-import React from 'react';
-import TableColumn from './TableColumn';
+import React, { Component } from 'react';
 
-export default class TableRowExtended extends TableColumn {
+export default class TableRowExtended extends Component {
     render() {
       return (
-        <tr {...this.props}>
-        </tr>
+        <tr {...this.props} />
       );
     }
 }
